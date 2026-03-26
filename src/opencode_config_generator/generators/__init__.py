@@ -12,6 +12,7 @@ from .plugins import PluginsGenerator
 from .vscode import VSCodeGenerator
 from .github import GitHubActionsGenerator
 from .docker import DockerGenerator
+from .precommit import PreCommitGenerator
 
 __all__ = [
     "OpenCodeJSONGenerator",
@@ -24,6 +25,7 @@ __all__ = [
     "VSCodeGenerator",
     "GitHubActionsGenerator",
     "DockerGenerator",
+    "PreCommitGenerator",
     "ConfigGenerator",
 ]
 
@@ -44,6 +46,7 @@ class ConfigGenerator:
         self.vscode_gen = VSCodeGenerator()
         self.github_gen = GitHubActionsGenerator()
         self.docker_gen = DockerGenerator()
+        self.precommit_gen = PreCommitGenerator()
         from .ignore import IgnoreGenerator
         self.ignore_gen = IgnoreGenerator()
 
@@ -151,13 +154,71 @@ class ConfigGenerator:
                 full_path.write_text(content, encoding="utf-8")
                 generated_files.append(file_path)
 
+        # 12. Generate pre-commit hooks
+        if getattr(config, 'create_precommit', False):
+            precommit_files = self.precommit_gen.generate(config)
+            for file_path, content in precommit_files.items():
+                full_path = self.output_dir / file_path
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(content, encoding="utf-8")
+                generated_files.append(file_path)
+
         return generated_files
 
     def preview(self, config):
-        """Preview what would be generated."""
+        """Preview what would be generated with full details."""
         
-        return {
+        preview = {
             "opencode.json": self.opencodejson_gen.generate(config),
             "AGENTS.md": self.agentsmd_gen.generate(config),
             ".ignore": self.ignore_gen.generate(config.language),
         }
+        
+        # Add list of all files to be generated
+        files_to_generate = []
+        
+        # Always generated
+        files_to_generate.extend(["opencode.json", "AGENTS.md", ".ignore"])
+        
+        # Conditional files
+        if config.create_agents and config.agents:
+            files_to_generate.extend([f".opencode/agents/{a.name}.md" for a in config.agents])
+        
+        if config.create_commands:
+            files_to_generate.extend([".opencode/commands/test.md", ".opencode/commands/lint.md"])
+        
+        if config.create_skills and config.selected_skills:
+            for skill in config.selected_skills:
+                files_to_generate.append(f".opencode/skills/{skill}/SKILL.md")
+        
+        if config.create_custom_tools:
+            files_to_generate.extend([".opencode/tools/hello.ts", ".opencode/tools/echo.ts"])
+        
+        if config.create_plugins and config.local_plugins:
+            for plugin in config.local_plugins:
+                files_to_generate.append(f".opencode/plugins/{plugin}.ts")
+        
+        if getattr(config, 'create_vscode', False):
+            files_to_generate.extend([".vscode/settings.json", ".vscode/extensions.json"])
+        
+        if getattr(config, 'create_github_actions', False):
+            files_to_generate.extend([".github/workflows/ci.yml", ".github/workflows/coverage.yml"])
+        
+        if getattr(config, 'create_docker', False):
+            files_to_generate.extend(["Dockerfile", ".dockerignore"])
+        
+        if getattr(config, 'create_precommit', False):
+            files_to_generate.append(".pre-commit-config.yaml")
+        
+        preview["files"] = files_to_generate
+        preview["config_summary"] = {
+            "name": config.name,
+            "language": config.language.value,
+            "framework": config.framework.value if config.framework else None,
+            "agents": len(config.agents),
+            "commands": config.create_commands,
+            "skills": len(config.selected_skills),
+            "plugins": len(config.selected_plugins) + len(config.local_plugins),
+        }
+        
+        return preview
