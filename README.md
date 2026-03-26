@@ -1,44 +1,44 @@
 # OpenCode Config Generator
 
-CLI tool para generar configuraciones de OpenCode con soporte para:
+CLI tool to generate OpenCode configurations with support for:
 - opencode.json
 - AGENTS.md
-- Agentes personalizados
-- Comandos (/test, /lint, etc.)
-- Skills de awesome-agent-skills
+- Custom agents
+- Commands (/test, /lint, etc.)
+- Skills from awesome-agent-skills
 - MCP Servers
-- Plugins del ecosistema (33+)
-- Plugins locales personalizados
+- Ecosystem plugins (33+)
+- Custom local plugins
 
-## Instalación
+## Installation
 
 ```bash
 pip install -e .
 ```
 
-## Uso
+## Usage
 
 ```bash
-# Modo interactivo
+# Interactive mode
 opencode-init -i
 
-# Con argumentos
-opencode-init -n mi-proyecto -l python --framework fastapi
+# With arguments
+opencode-init -n my-project -l python --framework fastapi
 
-# Con plugins
-opencode-init -n mi-proyecto --plugins opencode-wakatime --local-plugins notification
+# With plugins
+opencode-init -n my-project --plugins opencode-wakatime --local-plugins notification
 
-# Listar recursos
+# List resources
 opencode-init list-plugins
 opencode-init list-skills
 ```
 
 ## Features
 
-- ✨ Detección automática de stack
-- 📦 33+ plugins del ecosistema OpenCode
-- 🧩 9 templates de plugins locales
-- 🤖 Agentes personalizados
-- 💡 Skills de awesome-agent-skills
+- ✨ Automatic stack detection
+- 📦 33+ OpenCode ecosystem plugins
+- 🧩 9 local plugin templates
+- 🤖 Custom agents
+- 💡 Skills from awesome-agent-skills
 - 🔌 MCP Servers
-- 🎨 UI interactiva con Rich
+- 🎨 Interactive UI with Rich
