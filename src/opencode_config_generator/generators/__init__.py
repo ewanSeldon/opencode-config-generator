@@ -14,6 +14,7 @@ from .github import GitHubActionsGenerator
 from .docker import DockerGenerator
 from .precommit import PreCommitGenerator
 from .release import ReleaseGenerator
+from .ensemble import EnsembleGenerator
 
 __all__ = [
     "OpenCodeJSONGenerator",
@@ -28,6 +29,7 @@ __all__ = [
     "DockerGenerator",
     "PreCommitGenerator",
     "ReleaseGenerator",
+    "EnsembleGenerator",
     "ConfigGenerator",
 ]
 
@@ -50,6 +52,7 @@ class ConfigGenerator:
         self.docker_gen = DockerGenerator()
         self.precommit_gen = PreCommitGenerator()
         self.release_gen = ReleaseGenerator()
+        self.ensemble_gen = EnsembleGenerator()
         from .ignore import IgnoreGenerator
         self.ignore_gen = IgnoreGenerator()
 
@@ -175,6 +178,15 @@ class ConfigGenerator:
                 full_path.write_text(content, encoding="utf-8")
                 generated_files.append(file_path)
 
+        # 14. Generate multi-agent coordination
+        if hasattr(config, 'multi_agent') and config.multi_agent:
+            ensemble_files = self.ensemble_gen.generate(config)
+            for file_path, content in ensemble_files.items():
+                full_path = self.output_dir / file_path
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(content, encoding="utf-8")
+                generated_files.append(file_path)
+
         return generated_files
 
     def preview(self, config):
@@ -224,6 +236,13 @@ class ConfigGenerator:
         
         if getattr(config, 'create_release', False):
             files_to_generate.extend([".github/workflows/release.yml", ".release-please-config.json"])
+        
+        if hasattr(config, 'multi_agent') and config.multi_agent and config.multi_agent.architecture.value != "local":
+            files_to_generate.append(".opencode/ensemble.json")
+            if config.multi_agent.remote_agents:
+                for remote in config.multi_agent.remote_agents:
+                    files_to_generate.append(f".opencode/agents/{remote.name}.md")
+            files_to_generate.append(".opencode/skills/orchestration/SKILL.md")
         
         preview["files"] = files_to_generate
         preview["config_summary"] = {

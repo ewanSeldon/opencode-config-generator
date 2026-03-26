@@ -633,6 +633,44 @@ def get_plugins_by_category() -> dict[str, list[PluginDefinition]]:
     return categories
 
 
+class AgentArchitecture(Enum):
+    """Architecture for multi-agent setup."""
+    LOCAL = "local"
+    REMOTE = "remote"
+    HYBRID = "hybrid"
+
+
+class CoordinationMode(Enum):
+    """Mode for coordinating multiple agents."""
+    ENSEMBLE = "ensemble"
+    MCP = "mcp"
+    SSH = "ssh"
+    NATIVE = "native"
+
+
+@dataclass
+class RemoteAgentConfig:
+    """Configuration for a remote agent."""
+    name: str
+    ip: str
+    port: int = 8765
+    username: Optional[str] = None
+    role: str = "general"
+    worktree_branch: Optional[str] = None
+    enabled: bool = True
+
+
+@dataclass
+class MultiAgentConfig:
+    """Configuration for multi-agent architecture."""
+    architecture: AgentArchitecture = AgentArchitecture.LOCAL
+    coordination: CoordinationMode = CoordinationMode.NATIVE
+    remote_agents: list[RemoteAgentConfig] = field(default_factory=list)
+    ensemble_enabled: bool = False
+    mcp_coordinator_url: Optional[str] = None
+    ssh_config_path: Optional[str] = None
+
+
 @dataclass
 class ProjectConfig:
     name: str
@@ -664,3 +702,4 @@ class ProjectConfig:
     create_docker: bool = False
     create_precommit: bool = False
     create_release: bool = False
+    multi_agent: MultiAgentConfig = field(default_factory=MultiAgentConfig)

@@ -213,10 +213,11 @@ def run_interactive(name, output, detect):
         perm_edit=perm_edit,
         perm_bash=perm_bash,
         options={**options, "create_skills": create_skills, "create_plugins": create_plugins},
+        multi_agent=None
     )
 
 
-def create_config(name, output, detect, language=None, project_type=None, framework=None, package_manager=None, detected=None, agents=None, mcp_servers=None, selected_skills=None, selected_plugins=None, local_plugins=None, perm_edit=None, perm_bash=None, options=None):
+def create_config(name, output, detect, language=None, project_type=None, framework=None, package_manager=None, detected=None, agents=None, mcp_servers=None, selected_skills=None, selected_plugins=None, local_plugins=None, perm_edit=None, perm_bash=None, options=None, multi_agent=None):
     """Create ProjectConfig from provided or detected values."""
     
     # Use defaults if not provided
@@ -246,6 +247,9 @@ def create_config(name, output, detect, language=None, project_type=None, framew
         perm_bash = PermissionLevel.ASK
     if options is None:
         options = {"create_agents": True, "create_commands": True, "create_skills": False, "create_custom_tools": False, "create_plugins": False}
+    if multi_agent is None:
+        from opencode_config_generator.types import MultiAgentConfig
+        multi_agent = MultiAgentConfig()
     
     # If auto skills, get them now
     if "__auto__" in selected_skills and language and project_type:
@@ -270,6 +274,7 @@ def create_config(name, output, detect, language=None, project_type=None, framew
         permission_edit=perm_edit,
         permission_bash=perm_bash,
         output_dir=output,
+        multi_agent=multi_agent,
         **options
     )
 
@@ -359,11 +364,15 @@ def cli():
 @click.option("--docker/--no-docker", default=False, help="Generar Dockerfile y .dockerignore")
 @click.option("--precommit/--no-precommit", default=False, help="Generar configuración de pre-commit hooks")
 @click.option("--release/--no-release", default=False, help="Generar workflow de release automation")
+@click.option("--agent-arch", type=click.Choice(["local", "remote", "hybrid"]), default="local", help="Arquitectura de agentes (local=uno solo, remote=agentes en otras máquinas, hybrid=mezcla)")
+@click.option("--agent-ips", multiple=True, help="IPs de agentes remotos (para arquitectura remote/hybrid)")
+@click.option("--coordination", type=click.Choice(["ensemble", "mcp", "ssh", "native"]), default="native", help="Modo de coordinación entre agentes (ensemble=opencode-ensemble, mcp=via MCP server, ssh=via SSH, native=Task tool)")
+@click.option("--ensemble/--no-ensemble", default=False, help="Habilitar opencode-ensemble para coordinación de múltiples agentes")
 @click.option("--config", "-c", "config_file", type=click.Path(exists=True), 
               help="Archivo de configuración Markdown/YAML con toda la configuración")
 @click.option("--generate-template", is_flag=True, help="Generar plantilla de configuración y salir")
 @click.option("--interactive", "-i", is_flag=True, help="Forzar modo interactivo (requiere terminal)")
-def init(name, output, preview, detect, language, framework, project_type, agents, mcps, skill, skills_mode, perm_edit, perm_bash, commands, generate_skills, tools, plugins, local_plugins, vscode, github_actions, docker, precommit, release, config_file, generate_template, interactive):
+def init(name, output, preview, detect, language, framework, project_type, agents, mcps, skill, skills_mode, perm_edit, perm_bash, commands, generate_skills, tools, plugins, local_plugins, vscode, github_actions, docker, precommit, release, agent_arch, agent_ips, coordination, ensemble, config_file, generate_template, interactive):
     """Iniciar generador de configuración de OpenCode.
     
     Ejemplos de uso:
@@ -399,6 +408,10 @@ def init(name, output, preview, detect, language, framework, project_type, agent
     \b
     # Con VS Code, GitHub Actions, Docker y pre-commit
     opencode-init --name mi-proyecto --vscode --github-actions --docker --precommit
+    
+    \b
+    # Multi-agente con opencode-ensemble
+    opencode-init --name mi-proyecto --agent-arch hybrid --coordination ensemble --agent-ips 192.168.1.5 --agent-ips 192.168.1.6
     
     \b
     # Preview sin generar
@@ -577,7 +590,8 @@ def init(name, output, preview, detect, language, framework, project_type, agent
                 "create_docker": docker,
                 "create_precommit": precommit,
                 "create_release": release,
-            }
+            },
+            multi_agent=None
         )
         
         output_dir = output
