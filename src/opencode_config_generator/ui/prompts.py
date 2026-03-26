@@ -337,16 +337,16 @@ def ask_mcp_servers() -> list[MCPServer]:
     selected = questionary.checkbox(
         "MCP Servers:",
         choices=[
-            Choice(f"{mcp.name} - {mcp.description}", mcpserver)
-            for mcpserver in available_mcps
+            Choice(f"{server.name} - {server.description}", server)
+            for server in available_mcps
         ],
         qmark="🔌"
     ).ask()
 
     # Ask to enable each selected
-    for mcpserver in selected:
-        mcpserver.enabled = questionary.confirm(
-            f"¿Habilitar {mcpserver.name}?",
+    for server in selected:
+        server.enabled = questionary.confirm(
+            f"¿Habilitar {server.name}?",
             default=True,
             qmark="❓"
         ).ask()
