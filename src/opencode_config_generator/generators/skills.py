@@ -144,6 +144,231 @@ class SkillGenerator:
                 ]
             }
         },
+        "pdf": {
+            "description": "Extrae texto, tablas y metadatos de documentos PDF. Úsalo para procesamiento de documentos, indexación o análisis de PDFs.",
+            "name_format": "processing-pdf",
+            "content": {
+                "quickstart": """1. Instala: pip install pypdf2
+2. Abre: PdfReader('archivo.pdf')
+3. Extrae texto: page.extract_text()
+4. Extrae tablas: pdfplumber""",
+                "examples": [
+                    {"input": "Extraer texto", "output": "String con contenido"},
+                    {"input": "Extraer imágenes", "output": "Imágenes guardadas"},
+                    {"input": "Extraer tablas", "output": "DataFrame con datos"},
+                ]
+            }
+        },
+        "pptx": {
+            "description": "Lee, genera y ajusta diapositivas PowerPoint. Úsalo para presentaciones automatizadas, reportes o generación de slides.",
+            "name_format": "processing-pptx",
+            "content": {
+                "quickstart": """1. Instala: pip install python-pptx
+2. Crea: Presentation()
+3. Añade slide: slide_layout = prs.slide_layouts[1]
+4. Guarda: prs.save('presentacion.pptx')""",
+                "examples": [
+                    {"input": "Crear presentación", "output": "PPTX con slides"},
+                    {"input": "Añadir gráfico", "output": "Slide con chart"},
+                    {"input": "Aplicar tema", "output": "Estilos aplicados"},
+                ]
+            }
+        },
+        "d3js": {
+            "description": "Crea gráficos D3.js y visualizaciones de datos interactivas para web. Úsalo para dashboards, visualizaciones o componentes de UI.",
+            "name_format": "visualization-d3",
+            "content": {
+                "quickstart": """1. Instala: npm install d3
+2. Selecciona: d3.select('#chart')
+3. Añade datos: .data(data).enter()
+4. Renderiza: .append('svg')""",
+                "examples": [
+                    {"input": "Gráfico de barras", "output": "SVG con barras"},
+                    {"input": "Gráfico circular", "output": "Pie chart interactivo"},
+                    {"input": "Mapa", "output": "Visualización geográfica"},
+                ]
+            }
+        },
+        "swiftui": {
+            "description": "Desarrolla interfaces iOS/macOS con SwiftUI. Úsalo para apps Apple, componentes reutilizables o prototipado rápido.",
+            "name_format": "apple-swiftui",
+            "content": {
+                "quickstart": """1. Instala Xcode
+2. Crea proyecto SwiftUI
+3. Define vistas: @State, @Binding
+4. Preview: Canvas""",
+                "examples": [
+                    {"input": "Vista básica", "output": "Text, Image renderizados"},
+                    {"input": "Lista", "output": "List con datos"},
+                    {"input": "Navegación", "output": "NavigationStack"},
+                ]
+            }
+        },
+        "huggingface": {
+            "description": "Trabaja con Hugging Face Hub: modelos, datasets y Spaces. Úsalo para ML, fine-tuning o deployment de modelos.",
+            "name_format": "ml-huggingface",
+            "content": {
+                "quickstart": """1. Instala: pip install transformers datasets
+2. Carga modelo: from transformers import AutoModel
+3. Descarga dataset: load_dataset()
+4. Despliega: huggingface-cli deploy""",
+                "examples": [
+                    {"input": "Cargar modelo", "output": "Modelo en memoria"},
+                    {"input": "Fine-tuning", "output": "Modelo ajustado"},
+                    {"input": "Inference", "output": "Predicciones"},
+                ]
+            }
+        },
+        "dev-browser": {
+            "description": "Controla un navegador web para automatización de tareas. Úsalo para web scraping, testing o interacción con webs.",
+            "name_format": "browser-automation",
+            "content": {
+                "quickstart": """1. Instala: pip install playwright selenium
+2. Inicia navegador: driver = webdriver.Chrome()
+3. Navega: driver.get(url)
+4. Interactúa: driver.find_element()""",
+                "examples": [
+                    {"input": "Navegar a URL", "output": "Página cargada"},
+                    {"input": "Rellenar formulario", "output": "Formulario enviado"},
+                    {"input": "Scraping", "output": "Datos extraídos"},
+                ]
+            }
+        },
+        "spotify": {
+            "description": "Integra con Spotify Web API para reproducir música, crear playlists y analizar audio. Úsalo para apps de música o dashboards.",
+            "name_format": "api-spotify",
+            "content": {
+                "quickstart": """1. Instala: pip install spotipy
+2. Autentica: sp = spotipy.Spotify(auth=token)
+3. Busca: sp.search('query')
+4. Playback: sp.current_playback()""",
+                "examples": [
+                    {"input": "Buscar canción", "output": "Resultados de búsqueda"},
+                    {"input": "Crear playlist", "output": "Playlist creada"},
+                    {"input": "Obtener audio features", "output": "Datos de audio"},
+                ]
+            }
+        },
+        "sheets": {
+            "description": "Automatiza Google Sheets: lee, escribe y formatea hojas de cálculo. Úsalo para reportes, dashboards o integración con datos.",
+            "name_format": "api-sheets",
+            "content": {
+                "quickstart": """1. Instala: pip install gspread oauth2client
+2. Autentica: gc = gspread.authorize(credentials)
+3. Abre hoja: sh = gc.open('Sheet')
+4. Escribe: sh.sheet1.update()""",
+                "examples": [
+                    {"input": "Leer datos", "output": "DataFrame con datos"},
+                    {"input": "Escribir datos", "output": "Celdas actualizadas"},
+                    {"input": "Formatear", "output": "Estilos aplicados"},
+                ]
+            }
+        },
+        "slack": {
+            "description": "Integra con Slack API para enviar mensajes, canales y webhooks. Úsalo para notificaciones, bots o automatización de comunicación.",
+            "name_format": "integration-slack",
+            "content": {
+                "quickstart": """1. Instala: pip install slack-sdk
+2. Autentica: client = WebClient(token='xoxb-...')
+3. Envía mensaje: client.chat_postMessage()
+4. Crea canal: conversations_create()""",
+                "examples": [
+                    {"input": "Enviar mensaje", "output": "Mensaje en canal"},
+                    {"input": "Crear canal", "output": "Canal creado"},
+                    {"input": "Añadir reacción", "output": "Emoji reaccionado"},
+                ]
+            }
+        },
+        "docker": {
+            "description": "Gestiona contenedores Docker: construye imágenes, corre contenedores y orchestra servicios. Úsalo para devops, testing o deployment.",
+            "name_format": "devops-docker",
+            "content": {
+                "quickstart": """1. Construye: docker build -t name .
+2. Ejecuta: docker run -d -p 80:80 name
+3. Lista: docker ps
+4. Logs: docker logs container""",
+                "examples": [
+                    {"input": "Build imagen", "output": "Imagen creada"},
+                    {"input": "Correr contenedor", "output": "Contenedor ejecutándose"},
+                    {"input": "Docker Compose", "output": "Servicios levantados"},
+                ]
+            }
+        },
+        "postgres": {
+            "description": "Administra bases de datos PostgreSQL: consultas, migraciones y optimización. Úsalo para backend,数据分析 o administración de DB.",
+            "name_format": "db-postgres",
+            "content": {
+                "quickstart": """1. Conecta: conn = psycopg2.connect()
+2. Query: cursor.execute('SELECT * FROM table')
+3. Fetch: cursor.fetchall()
+4. Transacción: conn.commit()""",
+                "examples": [
+                    {"input": "Crear tabla", "output": "Tabla creada"},
+                    {"input": "Insertar datos", "output": "Filas insertadas"},
+                    {"input": "Backup", "output": "Dump de base de datos"},
+                ]
+            }
+        },
+        "redis": {
+            "description": "Usa Redis para caché, sesiones y pub/sub. Úsalo para caching, rate limiting o comunicación en tiempo real.",
+            "name_format": "cache-redis",
+            "content": {
+                "quickstart": """1. Conecta: r = redis.Redis()
+2. Set: r.set('key', 'value')
+3. Get: r.get('key')
+4. Expire: r.expire('key', 3600)""",
+                "examples": [
+                    {"input": "Guardar caché", "output": "Valor en caché"},
+                    {"input": "Session storage", "output": "Sesión guardada"},
+                    {"input": "Pub/Sub", "output": "Mensaje publicado"},
+                ]
+            }
+        },
+        "graphql": {
+            "description": "Desarrolla APIs GraphQL con Apollo o Strawberry. Úsalo para APIs modernas, federated graphs o real-time.",
+            "name_format": "api-graphql",
+            "content": {
+                "quickstart": """1. Define schema: @strawberry.type
+2. Query: @strawberry.field
+3. Mutation: @strawberry.mutation
+4. Ejecuta: strawberryAriadne()""",
+                "examples": [
+                    {"input": "Query simple", "output": "Datos resueltos"},
+                    {"input": "Mutation", "output": "Datos actualizados"},
+                    {"input": "Subscription", "output": "Updates en tiempo real"},
+                ]
+            }
+        },
+        "nextjs": {
+            "description": "Desarrolla aplicaciones Next.js con App Router, Server Components y API routes. Úsalo para fullstack web apps.",
+            "name_format": "web-nextjs",
+            "content": {
+                "quickstart": """1. Crea: npx create-next-app@latest
+2. Página: app/page.tsx
+3. API: app/api/route.ts
+4. Despliega: vercel deploy""",
+                "examples": [
+                    {"input": "Página SSR", "output": "HTML renderizado"},
+                    {"input": "API route", "output": "Endpoint JSON"},
+                    {"input": "Server Action", "output": "Form submission"},
+                ]
+            }
+        },
+        "react": {
+            "description": "Desarrolla componentes React con Hooks, Context y patterns. Úsalo para UIs interactivas, SPAs o libraries.",
+            "name_format": "web-react",
+            "content": {
+                "quickstart": """1. Crea: npm create vite@latest -- --template react
+2. Componente: function Comp() { useState() }
+3. State: const [state, setState] = useState()
+4. Render: <Comp />""",
+                "examples": [
+                    {"input": "Componente funcional", "output": "JSX renderizado"},
+                    {"input": "useEffect", "output": "Efecto ejecutado"},
+                    {"input": "useContext", "output": "Context accesible"},
+                ]
+            }
+        },
     }
 
     def generate_all(self, selected_skills: list[str], level: str = "standard") -> dict[str, str]:
