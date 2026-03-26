@@ -6,7 +6,17 @@ from ..types import AgentConfig, AgentMode
 
 class AgentGenerator:
     """Generates custom agent markdown files."""
-
+    
+    CURATED_AGENTS = {
+        "web": ["security-audit", "test-generator", "component-generator"],
+        "api": ["security-audit", "test-generator", "api-handler"],
+        "data": ["test-generator", "docs-writer"],
+        "library": ["test-generator", "docs-writer", "code-reviewer"],
+        "fullstack": ["security-audit", "test-generator", "component-generator", "api-handler"],
+        "mobile": ["test-generator", "docs-writer"],
+        "security": ["security-audit", "debugger"],
+    }
+    
     TEMPLATES = {
         "code-reviewer": {
             "description": "Analiza código y sugiere mejoras de calidad",
@@ -234,3 +244,7 @@ tools:
             return "api-handler"
         
         return "code-reviewer"  # Default
+    
+    def get_curated_agents(self, project_type: str) -> list[str]:
+        """Get curated agents for a project type."""
+        return self.CURATED_AGENTS.get(project_type.lower(), [])
