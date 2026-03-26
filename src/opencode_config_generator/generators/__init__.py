@@ -9,6 +9,9 @@ from .commands import CommandGenerator
 from .skills import SkillGenerator
 from .custom_tools import CustomToolGenerator
 from .plugins import PluginsGenerator
+from .vscode import VSCodeGenerator
+from .github import GitHubActionsGenerator
+from .docker import DockerGenerator
 
 __all__ = [
     "OpenCodeJSONGenerator",
@@ -18,6 +21,9 @@ __all__ = [
     "SkillGenerator",
     "CustomToolGenerator",
     "PluginsGenerator",
+    "VSCodeGenerator",
+    "GitHubActionsGenerator",
+    "DockerGenerator",
     "ConfigGenerator",
 ]
 
@@ -35,6 +41,9 @@ class ConfigGenerator:
         self.skill_gen = SkillGenerator()
         self.tool_gen = CustomToolGenerator()
         self.plugin_gen = PluginsGenerator()
+        self.vscode_gen = VSCodeGenerator()
+        self.github_gen = GitHubActionsGenerator()
+        self.docker_gen = DockerGenerator()
         from .ignore import IgnoreGenerator
         self.ignore_gen = IgnoreGenerator()
 
@@ -114,6 +123,33 @@ class ConfigGenerator:
                 full_path.parent.mkdir(parents=True, exist_ok=True)
                 full_path.write_text(content, encoding="utf-8")
                 generated_files.append(str(full_path.relative_to(self.output_dir)))
+
+        # 9. Generate VS Code settings
+        if getattr(config, 'create_vscode', False):
+            vscode_files = self.vscode_gen.generate(config)
+            for file_path, content in vscode_files.items():
+                full_path = self.output_dir / file_path
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(content, encoding="utf-8")
+                generated_files.append(file_path)
+
+        # 10. Generate GitHub Actions workflows
+        if getattr(config, 'create_github_actions', False):
+            github_files = self.github_gen.generate(config)
+            for file_path, content in github_files.items():
+                full_path = self.output_dir / file_path
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(content, encoding="utf-8")
+                generated_files.append(file_path)
+
+        # 11. Generate Docker files
+        if getattr(config, 'create_docker', False):
+            docker_files = self.docker_gen.generate(config)
+            for file_path, content in docker_files.items():
+                full_path = self.output_dir / file_path
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(content, encoding="utf-8")
+                generated_files.append(file_path)
 
         return generated_files
 
