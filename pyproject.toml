@@ -1,0 +1,23 @@
+[project]
+name = "opencode-config-generator"
+version = "0.1.0"
+description = "CLI para generar configuraciones de OpenCode"
+authors = [{name = "Usuario"}]
+requires-python = ">=3.9"
+dependencies = [
+    "rich>=13.0.0",
+    "questionary>=2.0.0",
+    "click>=8.0.0",
+    "typer>=0.9.0",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+opencode-init = "opencode_config_generator.main:cli"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
