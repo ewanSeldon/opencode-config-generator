@@ -26,32 +26,17 @@ class ReleaseGenerator:
         if config.language == Language.PYTHON:
             build_cmd = "python -m build"
             test_cmd = "pytest"
-            publish = """- name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: \${{ secrets.PYPI_TOKEN }}"""
         elif config.language in (Language.TYPESCRIPT, Language.JAVASCRIPT):
             build_cmd = "npm publish"
             test_cmd = "npm test"
-            publish = """- name: Publish to npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: \${{ secrets.NPM_TOKEN }}"""
         elif config.language == Language.GO:
             build_cmd = "go build"
             test_cmd = "go test ./..."
-            publish = """- name: Release
-        uses: goreleaser/goreleaser-action@v4
-        with:
-          args: release --rm-dist
-        env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}"""
         else:
             build_cmd = "echo 'No build step'"
             test_cmd = "echo 'No tests'"
-            publish = "# No publish configured for this language"
         
-        return f"""name: Release
+        workflow = """name: Release
 
 on:
   push:
@@ -85,7 +70,7 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Run tests
-        run: {test_cmd}
+        run: """ + test_cmd + """
 
       - name: Run lint
         run: ruff check src/
@@ -98,7 +83,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: \${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -111,7 +96,7 @@ jobs:
       - name: Release
         uses: google-github-actions/release-please-action@v3
         with:
-          token: \${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           release-type: python
           target-branch: main
           draft: false
@@ -133,11 +118,12 @@ jobs:
         run: pip install build
 
       - name: Build package
-        run: {build_cmd}
+        run: """ + build_cmd + """
 
-      - name: {publish.replace('$', '\\$').split('\\n')[0] if publish.startswith('-') else 'Publish'}
-        {publish.replace('$', '\\$')}
+      - name: Publish
+        run: echo "Configure PYPI_TOKEN or NPM_TOKEN secrets for publishing"
 """
+        return workflow
     
     def _generate_release_config(self) -> str:
         """Generate release-please configuration."""

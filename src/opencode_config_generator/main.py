@@ -354,11 +354,16 @@ def cli():
 @click.option("--tools/--no-tools", default=False, help="Generar tools personalizadas (TypeScript)")
 @click.option("--plugins", "-p", multiple=True, help="Plugins npm del ecosistema (nombre del package)")
 @click.option("--local-plugins", multiple=True, help="Plugins locales a generar (notification, env-protection, inject-env, custom-tool, compaction-hook, session-tracker, command-logger, file-watcher, permission-handler)")
+@click.option("--vscode/--no-vscode", default=False, help="Generar configuración de VS Code")
+@click.option("--github-actions/--no-github-actions", default=False, help="Generar workflows de GitHub Actions")
+@click.option("--docker/--no-docker", default=False, help="Generar Dockerfile y .dockerignore")
+@click.option("--precommit/--no-precommit", default=False, help="Generar configuración de pre-commit hooks")
+@click.option("--release/--no-release", default=False, help="Generar workflow de release automation")
 @click.option("--config", "-c", "config_file", type=click.Path(exists=True), 
               help="Archivo de configuración Markdown/YAML con toda la configuración")
 @click.option("--generate-template", is_flag=True, help="Generar plantilla de configuración y salir")
 @click.option("--interactive", "-i", is_flag=True, help="Forzar modo interactivo (requiere terminal)")
-def init(name, output, preview, detect, language, framework, project_type, agents, mcps, skill, skills_mode, perm_edit, perm_bash, commands, generate_skills, tools, plugins, local_plugins, config_file, generate_template, interactive):
+def init(name, output, preview, detect, language, framework, project_type, agents, mcps, skill, skills_mode, perm_edit, perm_bash, commands, generate_skills, tools, plugins, local_plugins, vscode, github_actions, docker, precommit, release, config_file, generate_template, interactive):
     """Iniciar generador de configuración de OpenCode.
     
     Ejemplos de uso:
@@ -390,6 +395,10 @@ def init(name, output, preview, detect, language, framework, project_type, agent
     \b
     # Con plugins locales
     opencode-init --name mi-proyecto --local-plugins notification --local-plugins custom-tool
+    
+    \b
+    # Con VS Code, GitHub Actions, Docker y pre-commit
+    opencode-init --name mi-proyecto --vscode --github-actions --docker --precommit
     
     \b
     # Preview sin generar
@@ -563,6 +572,11 @@ def init(name, output, preview, detect, language, framework, project_type, agent
                 "create_skills": create_skills,
                 "create_custom_tools": tools,
                 "create_plugins": bool(selected_plugins or local_plugins_list),
+                "create_vscode": vscode,
+                "create_github_actions": github_actions,
+                "create_docker": docker,
+                "create_precommit": precommit,
+                "create_release": release,
             }
         )
         

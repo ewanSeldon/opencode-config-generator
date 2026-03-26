@@ -13,6 +13,7 @@ from .vscode import VSCodeGenerator
 from .github import GitHubActionsGenerator
 from .docker import DockerGenerator
 from .precommit import PreCommitGenerator
+from .release import ReleaseGenerator
 
 __all__ = [
     "OpenCodeJSONGenerator",
@@ -26,6 +27,7 @@ __all__ = [
     "GitHubActionsGenerator",
     "DockerGenerator",
     "PreCommitGenerator",
+    "ReleaseGenerator",
     "ConfigGenerator",
 ]
 
@@ -47,6 +49,7 @@ class ConfigGenerator:
         self.github_gen = GitHubActionsGenerator()
         self.docker_gen = DockerGenerator()
         self.precommit_gen = PreCommitGenerator()
+        self.release_gen = ReleaseGenerator()
         from .ignore import IgnoreGenerator
         self.ignore_gen = IgnoreGenerator()
 
@@ -163,6 +166,15 @@ class ConfigGenerator:
                 full_path.write_text(content, encoding="utf-8")
                 generated_files.append(file_path)
 
+        # 13. Generate release automation
+        if getattr(config, 'create_release', False):
+            release_files = self.release_gen.generate(config)
+            for file_path, content in release_files.items():
+                full_path = self.output_dir / file_path
+                full_path.parent.mkdir(parents=True, exist_ok=True)
+                full_path.write_text(content, encoding="utf-8")
+                generated_files.append(file_path)
+
         return generated_files
 
     def preview(self, config):
@@ -209,6 +221,9 @@ class ConfigGenerator:
         
         if getattr(config, 'create_precommit', False):
             files_to_generate.append(".pre-commit-config.yaml")
+        
+        if getattr(config, 'create_release', False):
+            files_to_generate.extend([".github/workflows/release.yml", ".release-please-config.json"])
         
         preview["files"] = files_to_generate
         preview["config_summary"] = {

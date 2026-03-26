@@ -659,3 +659,8 @@ class ProjectConfig:
     create_skills: bool = False
     create_custom_tools: bool = False
     create_plugins: bool = False
+    create_vscode: bool = False
+    create_github_actions: bool = False
+    create_docker: bool = False
+    create_precommit: bool = False
+    create_release: bool = False
