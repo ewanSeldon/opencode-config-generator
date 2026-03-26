@@ -232,3 +232,77 @@ SKILL_BEST_PRACTICES:
 # compaction:
 #   auto: true
 #   prune: true
+
+# ============================================
+# SECCIÓN 13: MULTI-AGENTE (REMOTO/DISTRIBUIDO)
+# ============================================
+
+# Arquitectura de agentes:
+# - local: Un solo agente en la máquina local
+# - remote: Agentes en máquinas remotas (vía SSH/MCP)
+# - hybrid: Mezcla de agentes locales y remotos
+agent_arch: local
+
+# Modo de coordinación entre agentes:
+# - native: OpenCode Task tool (subagentes)
+# - ensemble: opencode-ensemble plugin (git worktrees)
+# - mcp: Via MCP server coordinator
+# - ssh: Via SSH commands
+coordination: native
+
+# Lista de agentes remotos (para architecture remote/hybrid)
+remote_agents:
+  # Ejemplo: Agente de documentación en otra máquina
+  # - name: docs-agent
+  #   ip: 192.168.1.5
+  #   port: 8765
+  #   role: documentation
+  #   username: ubuntu
+  #   worktree_branch: docs-agent
+  #   enabled: true
+
+  # Ejemplo: Agente de tests
+  # - name: test-agent
+  #   ip: 192.168.1.6
+  #   port: 8765
+  #   role: testing
+  #   username: ubuntu
+  #   worktree_branch: test-agent
+  #   enabled: true
+
+  # Ejemplo: Agente de review
+  # - name: review-agent
+  #   ip: 192.168.1.7
+  #   port: 8765
+  #   role: review
+  #   username: ubuntu
+  #   worktree_branch: review-agent
+  #   enabled: true
+
+# URL del coordinador MCP (si coordination: mcp)
+# mcp_coordinator_url: http://192.168.1.10:8765/mcp
+
+# Ruta al config SSH (si coordination: ssh)
+# ssh_config_path: ./ssh-config
+
+# Habilitar opencode-ensemble
+# ensemble: true
+
+# ============================================
+# SECCIÓN 14: OPCIONES ADICIONALES
+# ============================================
+
+# Generar configuración de VS Code
+# create_vscode: false
+
+# Generar workflows de GitHub Actions
+# create_github_actions: false
+
+# Generar Dockerfile y .dockerignore
+# create_docker: false
+
+# Generar configuración de pre-commit hooks
+# create_precommit: false
+
+# Generar workflow de release automation
+# create_release: false
